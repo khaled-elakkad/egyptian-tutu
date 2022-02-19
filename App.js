@@ -1,23 +1,13 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {
   ViroARScene,
-  ViroText,
-  ViroBox,
-  ViroConstants,
   ViroARSceneNavigator,
   ViroMaterials,
-  ViroAnimations,
   ViroARTrackingTargets,
   ViroARImageMarker,
   ViroVideo,
 } from '@viro-community/react-viro';
-
-// class ImageToVideo extends React.Component {
-//   render() {
-//     return <h1>Hello, {this.props.name}</h1>;
-//   }
-// }
 
 const ImageToVideo = () => {
   const [isPaused, setIsPaused] = useState(true);
