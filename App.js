@@ -1,31 +1,42 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {
   ViroARScene,
   ViroText,
+  ViroBox,
   ViroConstants,
   ViroARSceneNavigator,
+  ViroMaterials,
+  ViroAnimations,
 } from '@viro-community/react-viro';
 
-const HelloWorldSceneAR = () => {
-  const [text, setText] = useState('Initializing AR...');
-
-  function onInitialized(state, reason) {
-    console.log('guncelleme', state, reason);
-    if (state === ViroConstants.TRACKING_NORMAL) {
-      setText('Hello World!');
-    } else if (state === ViroConstants.TRACKING_NONE) {
-      // Handle loss of tracking
-    }
-  }
-
+const InitialScene = () => {
+  ViroMaterials.createMaterials({
+    wood: {
+      diffuseTexture: require('./assets/texture.jpeg'),
+    },
+  });
+  ViroAnimations.registerAnimations({
+    rotate: {
+      duration: 2500,
+      properties: {rotateY: '+=90'},
+    },
+  });
   return (
-    <ViroARScene onTrackingUpdated={onInitialized}>
-      <ViroText
-        text={text}
-        scale={[0.5, 0.5, 0.5]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
+    <ViroARScene>
+      {/* <ViroText
+        text="Hello World"
+        position={[0, 2, -5]}
+        styles={{fontSize: '30'}}
+      /> */}
+      <ViroBox
+        height={2}
+        length={2}
+        width={2}
+        position={[0, -1, -1]}
+        scale={[0.2, 0.2, 0.2]}
+        materials={['wood']}
+        animation={{name: 'rotate', loop: true, run: true}}
       />
     </ViroARScene>
   );
@@ -34,22 +45,10 @@ const HelloWorldSceneAR = () => {
 export default () => {
   return (
     <ViroARSceneNavigator
-      autofocus={true}
-      initialScene={{
-        scene: HelloWorldSceneAR,
-      }}
-      style={styles.f1}
+      initialScene={{scene: InitialScene}}
+      styles={{flex: 1}}
     />
   );
 };
 
-var styles = StyleSheet.create({
-  f1: {flex: 1},
-  helloWorldTextStyle: {
-    fontFamily: 'Arial',
-    fontSize: 30,
-    color: '#ffffff',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-});
+var styles = StyleSheet.create({});
