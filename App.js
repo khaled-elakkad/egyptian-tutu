@@ -1,69 +1,30 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
+import {ViroARSceneNavigator} from '@viro-community/react-viro';
 import {
-  ViroARScene,
-  ViroARSceneNavigator,
-  ViroMaterials,
-  ViroARTrackingTargets,
-  ViroARImageMarker,
-  ViroVideo,
-} from '@viro-community/react-viro';
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+} from '@apollo/client';
+import MainScene from './components/MainScene';
 
-const ImageToVideo = () => {
-  const [isPaused, setIsPaused] = useState(true);
-
-  ViroMaterials.createMaterials({
-    wood: {
-      diffuseTexture: require('./assets/texture.jpeg'),
-    },
-  });
-
-  ViroARTrackingTargets.createTargets({
-    targetOne: {
-      source: require('./assets/chocolate.jpeg'),
-      orientation: 'Up',
-      physicalWidth: 0.08, // real world width in meters
-    },
-  });
-
-  const handleAnchorUpdate = ({trackingMethod}) => {
-    if (trackingMethod === 'tracking') {
-      setIsPaused(false);
-    } else {
-      setIsPaused(true);
-    }
-  };
-  return (
-    <ViroARImageMarker
-      target={'targetOne'}
-      onAnchorUpdated={handleAnchorUpdate}>
-      <ViroVideo
-        source={require('./assets/believer.mp4')}
-        height={0.05}
-        width={0.08}
-        loop={true}
-        position={[0, 0, 0]}
-        transformBehaviors={['billboard']}
-        paused={isPaused}
-      />
-    </ViroARImageMarker>
-  );
-};
-
-const InitialScene = () => {
-  return (
-    <ViroARScene>
-      <ImageToVideo />
-    </ViroARScene>
-  );
-};
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: 'http://www.localtours.fun/ar-treasure-hunt/graphql',
+  }),
+  connectToDevTools: true,
+  cache: new InMemoryCache(),
+});
 
 export default () => {
   return (
-    <ViroARSceneNavigator
-      initialScene={{scene: InitialScene}}
-      styles={{flex: 1}}
-    />
+    <ApolloProvider client={client}>
+      <ViroARSceneNavigator
+        initialScene={{scene: MainScene}}
+        styles={{flex: 1}}
+      />
+    </ApolloProvider>
   );
 };
 
