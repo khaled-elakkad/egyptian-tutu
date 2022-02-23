@@ -1,9 +1,9 @@
 export const mediaLayout = {
-  landscape: {
+  Landscape: {
     width: 16,
     height: 9,
   },
-  portrait: {
+  Portrait: {
     height: 16,
     width: 9,
   },

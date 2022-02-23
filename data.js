@@ -8,31 +8,67 @@ class PointOfInterest {
 }
 
 export default [
-  new PointOfInterest('0001', require('./assets/chess.jpeg'), 0.96, {
-    type: 'video',
-    sourceUrl: require('./assets/believer.mp4'),
-    layout: 'landscape',
-  }),
+  new PointOfInterest(
+    '0001',
+    'http://www.localtours.fun/ar-treasure-hunt/wp-content/uploads/2022/02/lm.png',
+    0.057,
+    {
+      type: 'video',
+      sourceUrl:
+        'http://www.localtours.fun/ar-treasure-hunt/wp-content/uploads/2022/02/believer.mp4',
+      layout: 'landscape',
+    },
+  ),
   new PointOfInterest(
     '0002',
-    {uri: 'https://i.ibb.co/cgXBczk/chocolate.jpg'},
-    0.08,
+    'http://www.localtours.fun/ar-treasure-hunt/wp-content/uploads/2022/02/karneh.jpeg',
+    0.053,
     {
       type: 'img',
-      sourceUrl: require('./assets/mug.jpg'),
+      sourceUrl:
+        'http://www.localtours.fun/ar-treasure-hunt/wp-content/uploads/2022/02/geneh.jpeg',
       layout: 'portrait',
     },
   ),
-  new PointOfInterest('0003', require('./assets/flower.jpeg'), 0.12, {
-    type: 'text',
-    textString: 'saba7 el ward!!!!',
-  }),
+  new PointOfInterest(
+    '0003',
+    'http://www.localtours.fun/ar-treasure-hunt/wp-content/uploads/2022/02/id.jpeg',
+    0.053,
+    {
+      type: 'text',
+      textString: 'ana 3amoooooor!!!!',
+    },
+  ),
 ];
 
 // target: targetSource, targetWidth
 
-// displayDats:
+// displayData:
 //     type: video | text | image
 //     if video: source URL, layout: landscape | portrait
 //     if image: source URL, layout: landscape | portrait
 //     if text: textString
+
+// query MyQuery {
+//   targets {
+//     nodes {
+//       customtargets {
+//         arText
+//         arType
+//         arImage {
+//           mediaItemUrl
+//         }
+//         arVideo {
+//           mediaItemUrl
+//         }
+//         layout
+//         width
+//         targetImage {
+//           mediaItemUrl
+//           title
+//           id
+//         }
+//       }
+//     }
+//   }
+// }

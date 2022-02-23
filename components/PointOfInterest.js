@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {
   ViroARTrackingTargets,
   ViroARImageMarker,
@@ -12,7 +13,7 @@ function createImageTarget(name, source_uri, physicalWidth) {
   let targetName = name;
   let targets = {};
   targets[targetName] = {
-    source: source_uri,
+    source: {uri: source_uri},
     orientation: 'Up',
     physicalWidth,
   };
@@ -20,49 +21,34 @@ function createImageTarget(name, source_uri, physicalWidth) {
   ViroARTrackingTargets.createTargets(targets);
 }
 
-const PointOfInterest = ({poiData}) => {
-  const {id, targetSource, targetWidth, displayData} = poiData;
-  const {type} = displayData;
+const PointOfInterest = ({poiData, id}) => {
+  const {targetImage, arType, width, layout, arVideo, arImage, arText} =
+    poiData;
+
   const targetName = 'target' + id;
   const [isPaused, setIsPaused] = useState(true);
 
   useEffect(() => {
-    createImageTarget(targetName, targetSource, targetWidth);
+    createImageTarget(targetName, targetImage.mediaItemUrl, width);
   }, []);
 
-  // const betengana = {
-  //   [targetName]: {
-  //     // source: {uri: targetSource},
-  //     //source: require('../assets/chocolate.jpeg'),
-  //     source: targetSource,
-  //     orientation: 'Up',
-  //     physicalWidth: targetWidth, // real world width in meters
-  //   },
-  // };
-
-  // ViroARTrackingTargets.createTargets(betengana);
-
   const handleAnchorUpdate = ({trackingMethod}) => {
-    console.log('trackingMethod', targetSource, trackingMethod);
-    // if (trackingMethod === 'tracking') {
-    //   setIsPaused(false);
-    // } else {
-    //   setIsPaused(true);
-    // }
+    if (trackingMethod === 'tracking') {
+      setIsPaused(false);
+    } else {
+      setIsPaused(true);
+    }
   };
 
-  if (type === 'video') {
-    const {sourceUrl, layout} = displayData;
+  if (arType === 'Video') {
     return (
       <ViroARImageMarker
         target={targetName}
         onAnchorUpdated={handleAnchorUpdate}>
         <ViroVideo
-          // source={{uri: sourceUrl}}
-          // source={require('../assets/mug.jpg')}
-          source={sourceUrl}
-          height={getHeightFromParams(layout, targetWidth)}
-          width={targetWidth}
+          source={{uri: arVideo.mediaItemUrl}}
+          height={getHeightFromParams(layout, width)}
+          width={width}
           loop={true}
           position={[0, 0, 0]}
           transformBehaviors={['billboard']}
@@ -72,46 +58,45 @@ const PointOfInterest = ({poiData}) => {
     );
   }
 
-  if (type === 'img') {
-    const {sourceUrl, layout} = displayData;
+  if (arType === 'Image') {
     return (
       <ViroARImageMarker
         target={targetName}
         onAnchorUpdated={handleAnchorUpdate}>
         <ViroImage
-          // source={{uri: sourceUrl}}
-          // source={require('../assets/mug.jpg')}
-          source={sourceUrl}
-          height={getHeightFromParams(layout, targetWidth)}
-          width={targetWidth}
+          source={{uri: arImage.mediaItemUrl}}
+          height={getHeightFromParams(layout, width)}
+          width={width}
           position={[0, 0, 0]}
           transformBehaviors={['billboard']}
         />
       </ViroARImageMarker>
     );
   }
+
   return (
     <ViroARImageMarker target={targetName} onAnchorUpdated={handleAnchorUpdate}>
       <ViroText
-        text={displayData.textString || 'hello world'}
-        textAlign="left"
-        textAlignVertical="top"
-        textLineBreakMode="Justify"
-        textClipMode="ClipToBounds"
-        color="#ff0000"
-        width={2}
-        height={2}
-        style={{
-          fontFamily: 'Arial',
-          fontSize: 20,
-          fontWeight: '400',
-          fontStyle: 'italic',
-          color: '#0000FF',
-        }}
+        text={arText}
+        scale={[0.5, 0.5, 0.5]}
         position={[0, 0, 0]}
+        style={styles.helloWorldTextStyle}
+        transformBehaviors={['billboard']}
+        width={width}
       />
     </ViroARImageMarker>
   );
 };
+
+const styles = StyleSheet.create({
+  f1: {flex: 1},
+  helloWorldTextStyle: {
+    fontFamily: 'Arial',
+    fontSize: 8,
+    color: '#ffffff',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+});
 
 export default PointOfInterest;
