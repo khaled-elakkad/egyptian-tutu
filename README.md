@@ -1,29 +1,39 @@
-# Viro Starter Kit
+# MyReads Project
 
-This is a blank React Native project setup with Viro.
+This is a mobile AR game that gets target images and their AR override from a remote server and when the camera detects the target image, the AR override is displayed over it.
 
-## Prerequesites 
+## Prerequesites
 
-Set up the development environment for [react native](https://reactnative.dev/docs/environment-setup). 
+Set up the development environment for [react native](https://reactnative.dev/docs/environment-setup).
 
 > ⚠️ NOTE: The android emulators are not supported by Viro. See [this](https://viro-community.readme.io/docs/frequently-asked-questions#does-this-work-with-ios-simulators-or-android-emulators).
 
-## Installation
+## Running the Mobile App
 
-1. `git clone https://github.com/ViroCommunity/starter-kit.git`
-2. `cd starter-kit`
-3. `npm install`
-4. `npx pod-install` (iOS)
-5. `npx react-native run-android` or `npx react-native run-ios`
+To run and use the app:
 
-if `npx react-native run-android` fails with EACCESS gradlew.bat or EACCESS gradlew, run `chmod +x gradlew.bat` or `chmod +x gradlew`.
+- clone the repo with `git clone git@github.com:khaled-elakkad/egyptian-tutu.git`
+- navigate into the project directory with `cd egyptian-tutu`
+- install all project dependencies with `npm install`
+- run on android `npx react-native run-android`
 
-NOTE: The variant arguments are not needed for debug or release.
+## What You're Getting
 
-## How to Install Viro in an existing project?
+```bash
+├── README.md - This file.
+├── package.json # npm package manager file. It's unlikely that you'll need to modify this.
+└── src
+    ├── App.js # The root of the app. Connects the ApolloClient to the GraphQL backend and encapsulates the main Scene Navigator.
+    |
+    ├── components # contains the child componets of the main Scene Navigator
+    |   ├── MainScene
+    |   ├── PointOfInterest
+```
 
-If you are integrating ViroReact into an existing project, have a look at our [Installation instructions](https://github.com/ViroCommunity/viro/blob/main/readmes/INSTALL.md). Please note that this does _not_ work with Expo Managed Workflows. Sorry!
+## Backend Server
 
-# Need help?
+The backend is hosted on a wordpress website that has a [`GraphQL API`](http://www.localtours.fun/ar-treasure-hunt/graphql) exposed. To add images from your reality and be able to really play with app contact the author by email [`k.elakkad@gmail.com`](mailto:k.elakkad@gmail.com)
 
-[Reach us in Discord.](https://discord.gg/YfxDBGTxvG)
+## ViroReact Starter Kit
+
+This project was built using the [ViroReact Starter Kit](https://github.com/ViroCommunity/starter-kit).
