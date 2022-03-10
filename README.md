@@ -26,13 +26,15 @@ To run and use the app:
     ├── App.js # The root of the app. Connects the ApolloClient to the GraphQL backend and encapsulates the main Scene Navigator.
     |
     ├── components # contains the child componets of the main Scene Navigator
-    |   ├── MainScene
-    |   ├── PointOfInterest
+    |   ├── MainScene # fetches the points of interest from the backend and renders them
+    |   ├── PointOfInterest # Renders each point of interest according to its AR override whether Text, Video or Image.
 ```
 
 ## Backend Server
 
-The backend is hosted on a wordpress website that has a [`GraphQL API`](http://www.localtours.fun/ar-treasure-hunt/graphql) exposed. To add images from your reality and be able to really play with app contact the author by email [`k.elakkad@gmail.com`](mailto:k.elakkad@gmail.com)
+The backend is hosted on a wordpress website that has a [`GraphQL API`](http://www.localtours.fun/ar-treasure-hunt/graphql) exposed. 
+
+> ⚠️ NOTE: To add images from your reality and be able to really play with app contact the author by email [`k.elakkad@gmail.com`](mailto:k.elakkad@gmail.com)
 
 ## ViroReact Starter Kit
 
