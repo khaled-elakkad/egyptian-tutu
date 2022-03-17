@@ -1,13 +1,14 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {ViroARSceneNavigator} from '@viro-community/react-viro';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   HttpLink,
 } from '@apollo/client';
-import MainScene from './components/MainScene';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {NavigationContainer} from '@react-navigation/native';
+
+import MainNavigator from './src/navigation/Main';
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -20,12 +21,11 @@ const client = new ApolloClient({
 export default () => {
   return (
     <ApolloProvider client={client}>
-      <ViroARSceneNavigator
-        initialScene={{scene: MainScene}}
-        styles={{flex: 1}}
-      />
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <MainNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </ApolloProvider>
   );
 };
-
-var styles = StyleSheet.create({});
