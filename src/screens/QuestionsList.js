@@ -1,120 +1,40 @@
-import React from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {
   FlatList,
   View,
   StyleSheet,
   ActivityIndicator,
   Text,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import BottomSheet from '@gorhom/bottom-sheet';
 import {useQuery} from '@apollo/client';
+import _ from 'lodash';
 import QuestionItem from '../components/QuestionItem';
+import FullQuestion from '../components/FullQuestion';
 import {HINTS} from '../graphql/queries';
+import {answerIcons} from '../constants';
 
 import {PADDING_HORIZONTAL, PADDING_VERTICAL} from '../layout';
 
 function QuestionsList({navigation}) {
-  const {loading, error, data} = useQuery(HINTS);
+  const {loading, error, data} = useQuery(HINTS, {fetchPolicy: 'cache-only'});
 
-  console.log(
-    'data',
-    data &&
-      data.hints.nodes
-        .filter(({customhints}) => customhints.status === 'locked')
-        .map(({id, customhints}) => ({id, ...customhints.question})),
-  );
-  const datafff = [
-    {
-      __typename: 'Hint_Customhints_Question',
-      fieldGroupName: 'question',
-      firstChoice: {
-        __typename: 'Hint_Customhints_Question_FirstChoice',
-        choiceText: 'Akhenaten',
-        fieldGroupName: 'first_choice',
-        isRight: true,
-      },
-      fourthChoice: {
-        __typename: 'Hint_Customhints_Question_FourthChoice',
-        choiceText: 'Amenhotep',
-        fieldGroupName: 'fourth_choice',
-        isRight: null,
-      },
-      id: 'cG9zdDoyODA=',
-      questionText: "Who was Nefertiti's husband?",
-      secondChoice: {
-        __typename: 'Hint_Customhints_Question_SecondChoice',
-        choiceText: 'Khofo',
-        fieldGroupName: 'second_choice',
-        isRight: null,
-      },
-      thirdChoice: {
-        __typename: 'Hint_Customhints_Question_ThirdChoice',
-        choiceText: 'Ramses II',
-        fieldGroupName: 'third_choice',
-        isRight: null,
-      },
-    },
-    {
-      __typename: 'Hint_Customhints_Question',
-      fieldGroupName: 'question',
-      firstChoice: {
-        __typename: 'Hint_Customhints_Question_FirstChoice',
-        choiceText: "Altaïr Ibn-La'Ahad",
-        fieldGroupName: 'first_choice',
-        isRight: true,
-      },
-      fourthChoice: {
-        __typename: 'Hint_Customhints_Question_FourthChoice',
-        choiceText: 'Soghomon Tehlirian',
-        fieldGroupName: 'fourth_choice',
-        isRight: null,
-      },
-      id: 'cG9zdDoyNzg=',
-      questionText: 'What is the name of the assassin?',
-      secondChoice: {
-        __typename: 'Hint_Customhints_Question_SecondChoice',
-        choiceText: 'Sirhan Sirhan',
-        fieldGroupName: 'second_choice',
-        isRight: null,
-      },
-      thirdChoice: {
-        __typename: 'Hint_Customhints_Question_ThirdChoice',
-        choiceText: 'Ramón Mercader',
-        fieldGroupName: 'third_choice',
-        isRight: null,
-      },
-    },
-    {
-      __typename: 'Hint_Customhints_Question',
-      fieldGroupName: 'question',
-      firstChoice: {
-        __typename: 'Hint_Customhints_Question_FirstChoice',
-        choiceText: 'Ferdinand de Lesseps',
-        fieldGroupName: 'first_choice',
-        isRight: true,
-      },
-      fourthChoice: {
-        __typename: 'Hint_Customhints_Question_FourthChoice',
-        choiceText: 'Charles-Maurice de Talleyrand',
-        fieldGroupName: 'fourth_choice',
-        isRight: null,
-      },
-      id: 'cG9zdDoyNzE=',
-      questionText: 'Who built Suez Canal?',
-      secondChoice: {
-        __typename: 'Hint_Customhints_Question_SecondChoice',
-        choiceText: 'Vincent Benedetti',
-        fieldGroupName: 'second_choice',
-        isRight: null,
-      },
-      thirdChoice: {
-        __typename: 'Hint_Customhints_Question_ThirdChoice',
-        choiceText: 'Georges Clemenceau',
-        fieldGroupName: 'third_choice',
-        isRight: null,
-      },
-    },
-  ];
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ['60%', '80%'], []);
+  const handleSheetChanges = useCallback(index => {
+    if (index === -1) {
+      setSelectedQuestion(null);
+      setSelectedAnswer(null);
+    }
+  }, []);
+
+  const onAnswerChange = newAnswer => {
+    setSelectedAnswer(newAnswer);
+  };
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -130,18 +50,39 @@ function QuestionsList({navigation}) {
               return (
                 <QuestionItem
                   {...item}
-                  // onPress={() =>
-                  //   navigation.navigate('HintImage', {
-                  //     imageDetails: item.customhints.image,
-                  //     title: item.title,
-                  //   })
-                  // }
+                  onPress={() => {
+                    bottomSheetRef.current.snapToIndex(0);
+                    setSelectedQuestion(item);
+                    setSelectedAnswer(null);
+                  }}
                 />
               );
             }}
           />
         )}
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        enablePanDownToClose
+        detached>
+        {selectedQuestion && (
+          <FullQuestion
+            {...selectedQuestion}
+            selectedAnswer={selectedAnswer}
+            onAnswerChange={onAnswerChange}
+            icon={{
+              ...(selectedAnswer
+                ? !!selectedQuestion[selectedAnswer].isRight
+                  ? answerIcons.correct
+                  : answerIcons.incorrect
+                : answerIcons.empty),
+            }}
+          />
+        )}
+      </BottomSheet>
     </SafeAreaView>
   );
 }
@@ -156,6 +97,10 @@ const styles = StyleSheet.create({
     paddingVertical: PADDING_VERTICAL,
   },
   loading: {alignItems: 'center', justifyContent: 'center'},
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
 });
 
 export default QuestionsList;

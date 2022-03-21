@@ -5,8 +5,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Text,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useQuery} from '@apollo/client';
 import HintItem from '../components/HintItem';
 import {HINTS} from '../graphql/queries';
@@ -14,7 +14,7 @@ import {HINTS} from '../graphql/queries';
 import {PADDING_HORIZONTAL, PADDING_VERTICAL} from '../layout';
 
 function HintsList({navigation}) {
-  const {loading, error, data} = useQuery(HINTS);
+  const {loading, error, data} = useQuery(HINTS, {fetchPolicy: 'cache-only'});
 
   return (
     <SafeAreaView style={styles.screen}>

@@ -11,17 +11,12 @@ function QuestionItem({
   fourthChoice,
   secondChoice,
   thirdChoice,
+  onPress,
 }) {
   return (
-    <TouchableOpacity
-      // onPress={onPress}
-      style={[
-        styles.box,
-        // status === 'locked' ? styles.lockedBox : styles.unlockedBox,
-      ]}>
+    <TouchableOpacity onPress={onPress} style={[styles.box]}>
       <Text>{questionText}</Text>
       <Ionicon name={'help-circle'} size={24} color="orange" />
-      {/* checkmark-circle .. close-circle .. help-circle */}
     </TouchableOpacity>
   );
 }

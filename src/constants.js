@@ -8,3 +8,9 @@ export const mediaLayout = {
     width: 9,
   },
 };
+
+export const answerIcons = {
+  correct: {name: 'checkmark-circle', color: 'green'},
+  incorrect: {name: 'close-circle', color: 'red'},
+  empty: {name: 'help-circle', color: 'orange'},
+};
